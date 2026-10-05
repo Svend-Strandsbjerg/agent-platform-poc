@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agent Platform · Status</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module" src="/client/main.js"></script>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">AGENT PLATFORM / PROOF OF CONCEPT</p>
+      <h1>A small start.<br>A working connection.</h1>
+      <p class="intro">The application checks its backend to make sure everything is connected.</p>
+      <section aria-labelledby="status-heading">
+        <div class="section-header"><h2 id="status-heading">Backend status</h2><span class="tag">API</span></div>
+        <p id="health-status" role="status" aria-live="polite" data-state="checking">Checking backend…</p>
+        <button id="refresh" type="button">Check again <span aria-hidden="true">↗</span></button>
+      </section>
+      <noscript>Enable JavaScript to check the backend status.</noscript>
+      <footer>Node.js + TypeScript <span>Initial application</span></footer>
+    </main>
+  </body>
+</html>
