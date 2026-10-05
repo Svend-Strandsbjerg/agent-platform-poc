@@ -54,11 +54,10 @@ that the server is responding; it does not check external services.
 
 ## Browser E2E tests
 
-Install Chromium into this workspace after installing npm dependencies:
+Use the Chromium browser cache provided by the Paperclip runtime:
 
 ```sh
 npm ci
-PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium
 npm run build
 npm run test:e2e
 ```
@@ -72,10 +71,12 @@ loads the real page, checks health and readiness, retries each API check, and
 rejects browser console errors and uncaught exceptions. Existing Node tests
 remain available through `npm test`.
 
-Browser binaries live under `node_modules/`, so reinstall Chromium after
-`npm ci`. If installation is blocked by network policy or missing system
-libraries, report the hostname or library to the runtime operator without
-changing isolation settings.
+The E2E script sets `PLAYWRIGHT_BROWSERS_PATH=/srv/agent-platform/playwright-browsers`.
+This persistent shared cache survives `npm ci`; no `playwright install` step is
+required. Do not download or install Chromium into the task workspace. If the
+shared browser is unavailable, or network policy or missing system libraries
+block execution, report the missing browser, blocked hostname, or library to
+the runtime operator without changing isolation settings.
 
 Failures retain traces, screenshots, and video in `test-results/`. Open the
 HTML report with `npx playwright show-report` or a trace with
