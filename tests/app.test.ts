@@ -21,7 +21,10 @@ test('GET /api/health returns healthy JSON without caching', async () => {
 test('serves the frontend page and stylesheet', async () => {
   const response = await fetch(base);
   assert.equal(response.status, 200);
-  assert.match(await response.text(), /id="health-status"/);
+  const html = await response.text();
+  assert.match(html, /id="health-status"/);
+  assert.match(html, /id="readiness-status"/);
+  assert.match(html, /id="refresh-readiness"/);
   const style = await fetch(`${base}/styles.css`);
   assert.equal(style.status, 200);
   assert.match(style.headers.get('content-type')!, /text\/css/);
@@ -33,6 +36,19 @@ test('unknown routes and private files return 404', async () => {
 });
 test('unsupported methods return 405 with Allow header', async () => {
   const response = await fetch(`${base}/api/health`, { method: 'POST' });
+  assert.equal(response.status, 405);
+  assert.equal(response.headers.get('allow'), 'GET');
+});
+
+test('GET /api/ready returns ready JSON without caching', async () => {
+  const response = await fetch(`${base}/api/ready`);
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get('content-type')!, /application\/json/);
+  assert.equal(response.headers.get('cache-control'), 'no-store');
+  assert.deepEqual(await response.json(), { status: 'ready' });
+});
+test('readiness rejects unsupported methods', async () => {
+  const response = await fetch(`${base}/api/ready`, { method: 'POST' });
   assert.equal(response.status, 405);
   assert.equal(response.headers.get('allow'), 'GET');
 });

@@ -2,7 +2,8 @@
 
 A small Node.js + TypeScript application. One HTTP server serves a static frontend
 and `GET /api/health`, which returns `200` with `{ "status": "healthy" }`.
-The page checks the backend on load and offers a **Check again** button. Failed
+`GET /api/ready` returns `200` with `{ "status": "ready" }`.
+The page displays health and readiness independently, checks both on load and offers a retry button for each status. Failed
 requests, invalid responses, and requests taking over five seconds show an
 unavailable status.
 
@@ -36,8 +37,8 @@ and `PORT`, for example `HOST=0.0.0.0 PORT=8080 npm start`.
 npm test
 ```
 
-Tests cover the real HTTP health endpoint, static page serving, unknown routes,
-unsupported methods, and frontend health loading, error, and recovery logic.
+Tests cover the real HTTP health and readiness endpoints, static page serving, unknown routes,
+unsupported methods, and frontend health and readiness loading, error, and recovery logic.
 Tests use an ephemeral local port and do not require a running application.
 
 ## Layout

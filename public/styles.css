@@ -9,10 +9,10 @@ section { margin-top: 40px; padding: 28px; border: 1px solid #d4ded2; border-rad
 .section-header { display: flex; justify-content: space-between; align-items: center; }
 h2 { margin: 0; font-size: 16px; }
 .tag { font-size: 11px; border: 1px solid #d4ded2; border-radius: 5px; padding: 4px 8px; }
-#health-status { padding: 22px 0; display: flex; align-items: center; gap: 12px; }
-#health-status::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #8b938b; flex-shrink: 0; }
-#health-status[data-state=healthy]::before { background: #2c8054; }
-#health-status[data-state=unavailable]::before { background: #bc4d33; }
+.status { padding: 22px 0; display: flex; align-items: center; gap: 12px; }
+.status::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #8b938b; flex-shrink: 0; }
+.status[data-state=healthy]::before, .status[data-state=ready]::before { background: #2c8054; }
+.status[data-state=unavailable]::before { background: #bc4d33; }
 button { background: #173f31; color: #fff; border: none; border-radius: 7px; padding: 12px 18px; font: inherit; cursor: pointer; }
 button span { margin-left: 16px; }
 button:hover { background: #245a43; }
