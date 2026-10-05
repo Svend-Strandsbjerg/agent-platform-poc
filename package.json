@@ -11,7 +11,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "test": "tsx --test tests/*.test.ts",
-    "test:e2e": "NO_PROXY=127.0.0.1,localhost no_proxy=127.0.0.1,localhost PLAYWRIGHT_BROWSERS_PATH=0 playwright test"
+    "test:e2e": "NO_PROXY=127.0.0.1,localhost no_proxy=127.0.0.1,localhost PLAYWRIGHT_BROWSERS_PATH=/srv/agent-platform/playwright-browsers playwright test"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
