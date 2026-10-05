@@ -14,8 +14,10 @@
       <p class="intro">The application checks its backend to make sure everything is connected.</p>
       <section aria-labelledby="status-heading">
         <div class="section-header"><h2 id="status-heading">Backend status</h2><span class="tag">API</span></div>
-        <p id="health-status" role="status" aria-live="polite" data-state="checking">Checking backend…</p>
+        <p class="status" id="health-status" role="status" aria-live="polite" data-state="checking">Checking backend…</p>
         <button id="refresh" type="button">Check again <span aria-hidden="true">↗</span></button>
+        <p class="status" id="readiness-status" role="status" aria-live="polite" data-state="checking">Checking readiness…</p>
+        <button id="refresh-readiness" type="button">Check readiness again <span aria-hidden="true">↗</span></button>
       </section>
       <noscript>Enable JavaScript to check the backend status.</noscript>
       <footer>Node.js + TypeScript <span>Initial application</span></footer>
