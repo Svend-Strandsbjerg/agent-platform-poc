@@ -51,3 +51,32 @@ Tests use an ephemeral local port and do not require a running application.
 
 This is an intentionally minimal proof of concept. The health endpoint reports
 that the server is responding; it does not check external services.
+
+## Browser E2E tests
+
+Install Chromium into this workspace after installing npm dependencies:
+
+```sh
+npm ci
+PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium
+npm run build
+npm run test:e2e
+```
+
+Playwright starts the built application on `127.0.0.1:3101` and stops it after
+running headless Chromium with one worker. Keep that port free. The E2E script
+sets both proxy exclusion variables to only `127.0.0.1,localhost` so local
+server readiness checks work in proxied environments; external hosts still use
+the configured proxy. The browser test
+loads the real page, checks health and readiness, retries each API check, and
+rejects browser console errors and uncaught exceptions. Existing Node tests
+remain available through `npm test`.
+
+Browser binaries live under `node_modules/`, so reinstall Chromium after
+`npm ci`. If installation is blocked by network policy or missing system
+libraries, report the hostname or library to the runtime operator without
+changing isolation settings.
+
+Failures retain traces, screenshots, and video in `test-results/`. Open the
+HTML report with `npx playwright show-report` or a trace with
+`npx playwright show-trace <path-to-trace.zip>`.
