@@ -27,11 +27,13 @@ test('metadata handles HTTP errors, malformed payloads, network errors and timeo
 test('metadata renders loading, API values, and a clear error without showing stale details', async () => {
   const element = () => ({ textContent: '', hidden: false }) as HTMLElement;
   const status = element(), details = element(), name = element(), version = element(), environment = element();
+  const button = { disabled: false } as HTMLButtonElement;
   let resolve!: (response: Response) => void;
-  const pending = loadMetadata(status, details, name, version, environment,
+  const pending = loadMetadata(status, details, name, version, environment, button,
     () => new Promise<Response>(r => { resolve = r; }));
   assert.equal(status.textContent, 'Loading application metadata…');
   assert.equal(details.hidden, true);
+  assert.equal(button.disabled, true);
   resolve(new Response(JSON.stringify(metadata)));
   await pending;
   assert.equal(name.textContent, metadata.name);
@@ -39,7 +41,29 @@ test('metadata renders loading, API values, and a clear error without showing st
   assert.equal(environment.textContent, metadata.environment);
   assert.equal(details.hidden, false);
   assert.equal(status.textContent, 'Application metadata loaded.');
-  await loadMetadata(status, details, name, version, environment, reply('{}', 503));
+  assert.equal(button.disabled, false);
+  const updated = { name: 'updated-app', version: '3.0.0', environment: 'production' };
+  await loadMetadata(status, details, name, version, environment, button, reply(JSON.stringify(updated)));
+  assert.equal(name.textContent, updated.name);
+  assert.equal(version.textContent, updated.version);
+  assert.equal(environment.textContent, updated.environment);
+  assert.equal(button.disabled, false);
+  await loadMetadata(status, details, name, version, environment, button, reply('{}', 503));
   assert.equal(details.hidden, true);
-  assert.equal(status.textContent, 'Application metadata could not be loaded. Reload the page to try again.');
+  assert.equal(status.textContent, 'Application metadata could not be loaded. Select Refresh metadata to try again.');
+  assert.equal(button.disabled, false);
+  const recovered = { name: 'recovered-app', version: '4.0.0', environment: 'recovery' };
+  const retry = loadMetadata(status, details, name, version, environment, button,
+    () => new Promise<Response>(r => { resolve = r; }));
+  assert.equal(button.disabled, true);
+  assert.equal(details.hidden, true);
+  assert.equal(status.textContent, 'Loading application metadata…');
+  resolve(new Response(JSON.stringify(recovered)));
+  await retry;
+  assert.equal(button.disabled, false);
+  assert.equal(details.hidden, false);
+  assert.equal(status.textContent, 'Application metadata loaded.');
+  assert.equal(name.textContent, recovered.name);
+  assert.equal(version.textContent, recovered.version);
+  assert.equal(environment.textContent, recovered.environment);
 });

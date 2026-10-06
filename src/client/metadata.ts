@@ -21,13 +21,16 @@ export async function fetchMetadata(fetcher: typeof fetch = fetch): Promise<Meta
 
 export async function loadMetadata(
   status: HTMLElement, details: HTMLElement, name: HTMLElement,
-  version: HTMLElement, environment: HTMLElement, fetcher: typeof fetch = fetch,
+  version: HTMLElement, environment: HTMLElement, button: HTMLButtonElement,
+  fetcher: typeof fetch = fetch,
 ) {
+  button.disabled = true;
   status.textContent = 'Loading application metadata…';
   details.hidden = true;
   const metadata = await fetchMetadata(fetcher);
+  button.disabled = false;
   if (!metadata) {
-    status.textContent = 'Application metadata could not be loaded. Reload the page to try again.';
+    status.textContent = 'Application metadata could not be loaded. Select Refresh metadata to try again.';
     return;
   }
   name.textContent = metadata.name;

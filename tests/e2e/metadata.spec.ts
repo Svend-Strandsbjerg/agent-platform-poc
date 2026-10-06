@@ -25,7 +25,7 @@ for (const failure of ['http', 'network', 'invalid'] as const) {
     await page.route('**/api/meta', route => failure === 'network' ? route.abort()
       : route.fulfill({ status: failure === 'http' ? 503 : 200, json: {} }));
     await page.goto('/');
-    await expect(page.locator('#metadata-status')).toHaveText('Application metadata could not be loaded. Reload the page to try again.');
+    await expect(page.locator('#metadata-status')).toHaveText('Application metadata could not be loaded. Select Refresh metadata to try again.');
     await expect(page.locator('#metadata-details')).toBeHidden();
     await page.locator('#refresh').click();
     await page.locator('#refresh-readiness').click();
