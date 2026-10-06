@@ -12,12 +12,18 @@ export async function fetchHealth(fetcher: typeof fetch = fetch): Promise<Health
   }
 }
 
-export async function refreshHealth(status: HTMLElement, button: HTMLButtonElement, fetcher: typeof fetch = fetch) {
+export async function refreshHealth(status: HTMLElement, button: HTMLButtonElement, lastChecked: HTMLTimeElement, fetcher: typeof fetch = fetch) {
   button.disabled = true;
   status.dataset.state = 'checking';
   status.textContent = 'Checking backend…';
   const health = await fetchHealth(fetcher);
   status.dataset.state = health;
   status.textContent = health === 'healthy' ? 'Backend is healthy' : 'Backend unavailable. Try again.';
+  if (health === 'healthy') {
+    const checkedAt = new Date();
+    lastChecked.dateTime = checkedAt.toISOString();
+    lastChecked.textContent = `Last checked: ${checkedAt.toLocaleString()}`;
+    lastChecked.hidden = false;
+  }
   button.disabled = false;
 }

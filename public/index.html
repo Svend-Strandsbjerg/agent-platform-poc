@@ -15,8 +15,10 @@
       <section aria-labelledby="status-heading">
         <div class="section-header"><h2 id="status-heading">Backend status</h2><span class="tag">API</span></div>
         <p class="status" id="health-status" role="status" aria-live="polite" data-state="checking">Checking backend…</p>
+        <p><time id="health-last-checked" hidden></time></p>
         <button id="refresh" type="button">Check again <span aria-hidden="true">↗</span></button>
         <p class="status" id="readiness-status" role="status" aria-live="polite" data-state="checking">Checking readiness…</p>
+        <p><time id="readiness-last-checked" hidden></time></p>
         <button id="refresh-readiness" type="button">Check readiness again <span aria-hidden="true">↗</span></button>
       </section>
       <noscript>Enable JavaScript to check the backend status.</noscript>

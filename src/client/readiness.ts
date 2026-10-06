@@ -12,12 +12,18 @@ export async function fetchReadiness(fetcher: typeof fetch = fetch): Promise<Rea
   }
 }
 
-export async function refreshReadiness(status: HTMLElement, button: HTMLButtonElement, fetcher: typeof fetch = fetch) {
+export async function refreshReadiness(status: HTMLElement, button: HTMLButtonElement, lastChecked: HTMLTimeElement, fetcher: typeof fetch = fetch) {
   button.disabled = true;
   status.dataset.state = 'checking';
   status.textContent = 'Checking readiness…';
   const readiness = await fetchReadiness(fetcher);
   status.dataset.state = readiness;
   status.textContent = readiness === 'ready' ? 'Backend is ready' : 'Readiness unavailable. Try again.';
+  if (readiness === 'ready') {
+    const checkedAt = new Date();
+    lastChecked.dateTime = checkedAt.toISOString();
+    lastChecked.textContent = `Last checked: ${checkedAt.toLocaleString()}`;
+    lastChecked.hidden = false;
+  }
   button.disabled = false;
 }
