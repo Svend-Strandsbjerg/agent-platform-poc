@@ -1,6 +1,8 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 
+const { name, version } = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
+
 const assets = new Map([
   ['/', { file: new URL('../public/index.html', import.meta.url), type: 'text/html; charset=utf-8' }],
   ['/styles.css', { file: new URL('../public/styles.css', import.meta.url), type: 'text/css; charset=utf-8' }],
@@ -24,6 +26,11 @@ export function createApp() {
     if (path === '/api/ready') {
       response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
       response.end(JSON.stringify({ status: 'ready' }));
+      return;
+    }
+    if (path === '/api/meta') {
+      response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+      response.end(JSON.stringify({ name, version, environment: process.env.NODE_ENV ?? 'development' }));
       return;
     }
     const asset = assets.get(path);
