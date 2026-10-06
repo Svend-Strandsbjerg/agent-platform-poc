@@ -15,10 +15,14 @@ readinessButton.addEventListener('click', () => void refreshReadiness(readiness,
 void refreshReadiness(readiness, readinessButton, readinessLastChecked);
 
 
-void loadMetadata(
+const metadataButton = document.querySelector<HTMLButtonElement>('#refresh-metadata')!;
+const refreshMetadata = () => loadMetadata(
   document.querySelector<HTMLElement>('#metadata-status')!,
   document.querySelector<HTMLElement>('#metadata-details')!,
   document.querySelector<HTMLElement>('#metadata-name')!,
   document.querySelector<HTMLElement>('#metadata-version')!,
   document.querySelector<HTMLElement>('#metadata-environment')!,
+  metadataButton,
 );
+metadataButton.addEventListener('click', () => void refreshMetadata());
+void refreshMetadata();
