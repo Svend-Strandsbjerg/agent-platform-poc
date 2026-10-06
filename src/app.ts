@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 
 const assets = new Map([
+  ['/client/metadata.js', { file: new URL('./client/metadata.js', import.meta.url), type: 'text/javascript; charset=utf-8' }],
   ['/', { file: new URL('../public/index.html', import.meta.url), type: 'text/html; charset=utf-8' }],
   ['/styles.css', { file: new URL('../public/styles.css', import.meta.url), type: 'text/css; charset=utf-8' }],
   ['/client/main.js', { file: new URL('./client/main.js', import.meta.url), type: 'text/javascript; charset=utf-8' }],
