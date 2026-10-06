@@ -28,8 +28,9 @@ export async function loadMetadata(
   status.textContent = 'Loading application metadata…';
   details.hidden = true;
   const metadata = await fetchMetadata(fetcher);
+  button.disabled = false;
   if (!metadata) {
-    status.textContent = 'Application metadata could not be loaded. Reload the page to try again.';
+    status.textContent = 'Application metadata could not be loaded. Select Refresh metadata to try again.';
     return;
   }
   name.textContent = metadata.name;
@@ -37,5 +38,4 @@ export async function loadMetadata(
   environment.textContent = metadata.environment;
   details.hidden = false;
   status.textContent = 'Application metadata loaded.';
-  button.disabled = false;
 }

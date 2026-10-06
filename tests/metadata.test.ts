@@ -50,5 +50,20 @@ test('metadata renders loading, API values, and a clear error without showing st
   assert.equal(button.disabled, false);
   await loadMetadata(status, details, name, version, environment, button, reply('{}', 503));
   assert.equal(details.hidden, true);
-  assert.equal(status.textContent, 'Application metadata could not be loaded. Reload the page to try again.');
+  assert.equal(status.textContent, 'Application metadata could not be loaded. Select Refresh metadata to try again.');
+  assert.equal(button.disabled, false);
+  const recovered = { name: 'recovered-app', version: '4.0.0', environment: 'recovery' };
+  const retry = loadMetadata(status, details, name, version, environment, button,
+    () => new Promise<Response>(r => { resolve = r; }));
+  assert.equal(button.disabled, true);
+  assert.equal(details.hidden, true);
+  assert.equal(status.textContent, 'Loading application metadata…');
+  resolve(new Response(JSON.stringify(recovered)));
+  await retry;
+  assert.equal(button.disabled, false);
+  assert.equal(details.hidden, false);
+  assert.equal(status.textContent, 'Application metadata loaded.');
+  assert.equal(name.textContent, recovered.name);
+  assert.equal(version.textContent, recovered.version);
+  assert.equal(environment.textContent, recovered.environment);
 });

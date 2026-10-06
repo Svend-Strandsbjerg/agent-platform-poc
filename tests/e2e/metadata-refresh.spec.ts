@@ -37,14 +37,40 @@ test('refresh fetches new metadata, disables while loading, and enables after su
 });
 
 for (const failure of ['http', 'network', 'invalid'] as const) {
-  test(`failed ${failure} refresh hides stale metadata and preserves Health and Readiness`, async ({ page }) => {
+  test(`failed ${failure} refresh allows retry with new metadata and preserves Health and Readiness`, async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('#metadata-details')).toBeVisible();
-    await page.route('**/api/meta', route => failure === 'network' ? route.abort()
-      : route.fulfill({ status: failure === 'http' ? 503 : 200, json: {} }));
-    await page.getByRole('button', { name: 'Refresh metadata', exact: true }).click();
-    await expect(page.locator('#metadata-status')).toHaveText('Application metadata could not be loaded. Reload the page to try again.');
+    let requests = 0;
+    let release!: () => void;
+    const pending = new Promise<void>(resolve => { release = resolve; });
+    await page.route('**/api/meta', async route => {
+      expect(route.request().method()).toBe('GET');
+      requests++;
+      if (requests === 1) {
+        if (failure === 'network') await route.abort();
+        else await route.fulfill({ status: failure === 'http' ? 503 : 200, json: {} });
+        return;
+      }
+      await pending;
+      await route.fulfill({ json: { name: 'Recovered app', version: '7.8.9', environment: 'recovery' } });
+    });
+    const button = page.getByRole('button', { name: 'Refresh metadata', exact: true });
+    await button.click();
+    await expect(page.locator('#metadata-status')).toHaveText('Application metadata could not be loaded. Select Refresh metadata to try again.');
     await expect(page.locator('#metadata-details')).toBeHidden();
+    await expect(button).toBeEnabled();
+    await button.click();
+    await expect(button).toBeDisabled();
+    await expect(page.locator('#metadata-status')).toHaveText('Loading application metadata…');
+    await expect(page.locator('#metadata-details')).toBeHidden();
+    release();
+    await expect(page.locator('#metadata-name')).toHaveText('Recovered app');
+    await expect(page.locator('#metadata-version')).toHaveText('7.8.9');
+    await expect(page.locator('#metadata-environment')).toHaveText('recovery');
+    await expect(page.locator('#metadata-details')).toBeVisible();
+    await expect(page.locator('#metadata-status')).toHaveText('Application metadata loaded.');
+    await expect(button).toBeEnabled();
+    expect(requests).toBe(2);
     await page.locator('#refresh').click();
     await page.locator('#refresh-readiness').click();
     await expect(page.locator('#health-status')).toHaveText('Backend is healthy');
