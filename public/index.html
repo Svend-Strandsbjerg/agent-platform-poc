@@ -21,6 +21,15 @@
         <p><time id="readiness-last-checked" hidden></time></p>
         <button id="refresh-readiness" type="button">Check readiness again <span aria-hidden="true">↗</span></button>
       </section>
+      <section aria-labelledby="metadata-heading">
+        <div class="section-header"><h2 id="metadata-heading">Application metadata</h2><span class="tag">API</span></div>
+        <p id="metadata-status" role="status" aria-live="polite">Loading application metadata…</p>
+        <dl id="metadata-details" hidden>
+          <dt>Application name</dt><dd id="metadata-name"></dd>
+          <dt>Application version</dt><dd id="metadata-version"></dd>
+          <dt>Runtime environment</dt><dd id="metadata-environment"></dd>
+        </dl>
+      </section>
       <noscript>Enable JavaScript to check the backend status.</noscript>
       <footer>Node.js + TypeScript <span>Initial application</span></footer>
     </main>

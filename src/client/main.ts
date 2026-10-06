@@ -1,3 +1,4 @@
+import { loadMetadata } from './metadata.js';
 import { refreshReadiness } from './readiness.js';
 import { refreshHealth } from './health.js';
 
@@ -12,3 +13,12 @@ const readinessButton = document.querySelector<HTMLButtonElement>('#refresh-read
 const readinessLastChecked = document.querySelector<HTMLTimeElement>('#readiness-last-checked')!;
 readinessButton.addEventListener('click', () => void refreshReadiness(readiness, readinessButton, readinessLastChecked));
 void refreshReadiness(readiness, readinessButton, readinessLastChecked);
+
+
+void loadMetadata(
+  document.querySelector<HTMLElement>('#metadata-status')!,
+  document.querySelector<HTMLElement>('#metadata-details')!,
+  document.querySelector<HTMLElement>('#metadata-name')!,
+  document.querySelector<HTMLElement>('#metadata-version')!,
+  document.querySelector<HTMLElement>('#metadata-environment')!,
+);
