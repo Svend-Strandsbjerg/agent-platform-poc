@@ -81,3 +81,4 @@ the runtime operator without changing isolation settings.
 Failures retain traces, screenshots, and video in `test-results/`. Open the
 HTML report with `npx playwright show-report` or a trace with
 `npx playwright show-trace <path-to-trace.zip>`.
+Agent identity test – 2026-10-23
